@@ -55,9 +55,14 @@ if (!localStorage.getItem("favoritoAtualizado")) {
 await db.from("search_logs").insert([{ termo }]);
     const { data, error } = await db
       .from("tos")
-      .select("*")
-      .or(`codigo.ilike.%${termo}%,cidade.ilike.%${termo}%,estado.ilike.%${termo}%,tipo.ilike.%${termo}%`)
-      .order("cidade", { ascending: true });
+.select("*")
+.or(`
+  and(codigo.ilike.%${termo}%,deleted_at.is.null),
+  and(cidade.ilike.%${termo}%,deleted_at.is.null),
+  and(estado.ilike.%${termo}%,deleted_at.is.null),
+  and(tipo.ilike.%${termo}%,deleted_at.is.null)
+`)
+.order("cidade", { ascending: true });
 
     if (error) {
       console.error("Erro na busca:", error);
