@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - TO Shopee</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+
+  <!-- NAVBAR SUPERIOR ESCURA -->
+  <div class="admin-navbar">
+    <div class="admin-navbar-left">
+      <strong>TO Shopee Beta</strong>
+    </div>
+    <div class="admin-navbar-right">
+      <button id="logoutBtn" class="admin-logout-btn">Sair</button>
+    </div>
+  </div>
+
+  <!-- SUBMENU -->
+  <div class="admin-subnav">
+    <a href="#" id="voltarBusca">Voltar Busca</a>
+    <a href="#" class="active">Gerenciar TOs</a>
+    <a href="#" class="disabled">Usuários</a>
+    <a href="#" class="disabled">Importar Planilha</a>
+  </div>
+
+  <!-- CONTEÚDO CENTRAL -->
+  <div class="admin-container">
+
+    <!-- CARD BUSCA -->
+    <div class="admin-card">
+      <h2>Gerenciar TO</h2>
+
+      <input
+        type="text"
+        id="adminSearch"
+        class="admin-search-input"
+        placeholder="Digite cidade, código ou estado..."
+      />
+
+      <p id="buscaAdminMsg" class="admin-msg"></p>
+    </div>
+
+    <!-- BOTÃO CRIAR -->
+    <button id="btnCriarTO" class="admin-create-btn">
+      <i class="bi bi-plus-lg"></i> Criar TO
+    </button>
+
+    <!-- RESULTADO -->
+    <div class="admin-card">
+      <h3>Resultado da busca</h3>
+      <div id="adminResults"></div>
+    </div>
+
+  </div>
+
+  <!-- MODAL CRIAR TO -->
+  <div id="modalCriarTO" class="admin-modal hidden">
+    <div class="admin-modal-content">
+      <span class="admin-close" id="fecharModal">&times;</span>
+      <h3>Criar TO</h3>
+
+      <label>Tipo</label>
+      <select id="novoTipo">
+        <option value="HUB">HUB</option>
+        <option value="SOC">SOC</option>
+        <option value="3PL">3PL</option>
+      </select>
+
+      <label>Cidade</label>
+      <input type="text" id="novaCidade" />
+
+      <label>Estado</label>
+      <input type="text" id="novoEstado" />
+
+      <label>Código</label>
+      <input type="text" id="novoCodigo" />
+
+      <button id="salvarTO" class="admin-save-btn">
+        Salvar TO
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
