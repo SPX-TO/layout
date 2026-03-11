@@ -28,16 +28,25 @@ const searchInput = document.getElementById("searchInput");
 const resultsContainer = document.getElementById("results");
 
 let debounceTimeout;
+let ultimaBusca = "";
 
 // 🔠 FORÇAR CAIXA ALTA
 searchInput.addEventListener("input", () => {
+  resultsContainer.innerHTML = "";
+resultadoCard.style.display = "none";
 
 searchInput.value = searchInput.value.toUpperCase();
 
 clearTimeout(debounceTimeout);
 
 debounceTimeout = setTimeout(() => {
-buscar(searchInput.value.trim());
+
+const termo = searchInput.value.trim();
+
+if (termo.length < 2) return;
+
+buscar(termo);
+
 }, 300);
 
 });
@@ -52,18 +61,35 @@ localStorage.setItem("favoritoAtualizado", "true");
 // ================================
 async function buscar(termo) {
 
-if (!termo) {
+termo = termo.trim();
+termo = termo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+termo = termo.replace(/^([A-Z]+)[\s\-]?(\d+)$/, "$1-$2");
+const termoSemHifen = termo.replace("-", "");
+if (termo === ultimaBusca) return;
+ultimaBusca = termo;
+
+if (searchInput.value.trim() !== termo) return;
+if (!termo || termo.length < 2) {
+
 resultsContainer.innerHTML = "";
+resultadoCard.style.display = "none";
+
+const contador = document.getElementById("contadorResultados");
+if (contador) contador.innerText = "";
+
 return;
 }
 
 // registrar busca
-await db.from("search_logs").insert([{ termo }]);
+// await db.from("search_logs").insert([{ termo }]);
+resultsContainer.innerHTML = "<div class='buscando'>Buscando...</div>";
+resultadoCard.style.display = "block";
 
 const { data, error } = await db
 .from("tos")
 .select("*")
-.or(`and(codigo.ilike.%${termo}%,deleted_at.is.null),and(cidade.ilike.%${termo}%,deleted_at.is.null),and(estado.ilike.%${termo}%,deleted_at.is.null),and(tipo.ilike.%${termo}%,deleted_at.is.null)`)
+.or(`codigo.ilike.%${termo}%,codigo.ilike.%${termoSemHifen}%,cidade.ilike.%${termo}%,estado.ilike.%${termo}%,tipo.ilike.%${termo}%`)
+.is("deleted_at", null)
 .order("cidade", { ascending: true });
 
 if (error) {
@@ -79,11 +105,15 @@ renderizarResultados(data);
 // 🎨 RENDER RESULTADOS
 // ================================
 function renderizarResultados(lista) {
-
+const contador = document.getElementById("contadorResultados");
+if (contador) {
+contador.innerText = lista ? lista.length + " resultados" : "0 resultados";
+}
 resultsContainer.innerHTML = "";
 resultadoCard.style.display = "none";
 
 if (!lista || lista.length === 0) {
+resultsContainer.innerHTML = "<div class='nenhum-resultado'>Nenhum resultado encontrado</div>";
 return;
 }
 
