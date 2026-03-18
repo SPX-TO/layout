@@ -1,0 +1,49 @@
+#linhasMesas{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.linha-mesas{
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 20px;
+}
+
+.mesa{
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fanouts-mesa{
+  min-height: 40px;
+  border: 2px dashed #ccc;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.fanout-item{
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: grab;
+}
+
+.fanout-item-mesa{
+  background: #cfe2ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.esteira{
+  background: #333;
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+}

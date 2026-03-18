@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Layout Esteira</title>
+
+<link rel="stylesheet" href="css/esteira.css">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- ESQUERDA -->
+  <div class="sidebar">
+
+    <h3>Fan-outs do turno</h3>
+
+    <input id="fanoutInput" placeholder="Digite fan-out">
+
+    <div id="listaFanouts" class="lista"></div>
+
+    <h4>Selecionados</h4>
+    <div id="fanoutsSelecionados" class="lista"></div>
+
+  </div>
+
+  <!-- CENTRO -->
+  <div class="conteudo">
+
+    <button id="btnAddMesa">+ Mesa</button>
+
+    <div class="area">
+
+      <div class="lado">
+        <h3>ESQUERDA</h3>
+        <div id="mesasEsquerda"></div>
+      </div>
+
+      <div class="seta">↓ ↓ ↓</div>
+
+      <div class="lado">
+        <h3>DIREITA</h3>
+        <div id="mesasDireita"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
