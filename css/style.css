@@ -1,141 +1,187 @@
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#f4f4f4;
-}
-
-/* TOPO */
-.topo{
-padding:10px;
-background:#fff;
-border-bottom:1px solid #ddd;
-}
-
-button{
-padding:6px 12px;
-cursor:pointer;
-border:1px solid #ccc;
-background:#fff;
-border-radius:4px;
-}
-
+/* ============================= */
 /* LAYOUT GERAL */
+/* ============================= */
+
 .container{
 display:flex;
-height:calc(100vh - 50px);
+gap:20px;
+padding:10px;
+font-family:Arial, sans-serif;
 }
 
-/* FANOUTS */
+
+/* ============================= */
+/* FANOUTS ESQUERDA */
+/* ============================= */
+
 .fanouts{
 width:220px;
-background:#fff;
-padding:10px;
-border-right:1px solid #ddd;
-}
-
-.fanouts h3{
-margin-top:0;
-}
-
-#fanoutInput{
-width:100%;
-padding:6px;
-margin-bottom:10px;
-border:1px solid #ccc;
-border-radius:4px;
 }
 
 #listaFanouts{
-max-height:70vh;
-overflow-y:auto;
+margin-top:10px;
+display:flex;
+flex-direction:column;
+gap:6px;
 }
 
-/* FANOUT ITEM */
 .fanout-item{
-padding:6px 10px;
+background:#f1f1f1;
+padding:6px;
 border-radius:6px;
-background:#eee;
-border:1px solid #ccc;
-margin-bottom:6px;
 cursor:pointer;
 font-size:13px;
-transition:0.2s;
-}
-
-.fanout-item:hover{
-background:#ddd;
 }
 
 .fanout-item.selecionado{
-background:#007bff;
-color:#fff;
-border-color:#007bff;
+background:#0d6efd;
+color:white;
 }
 
-/* LAYOUT ESTEIRA */
-.layout{
+
+/* ============================= */
+/* AREA ESTEIRA */
+/* ============================= */
+
+.esteira-area{
+display:grid;
+grid-template-columns: auto 70px auto;
+gap:15px;
+align-items:start;
+}
+
+
+/* ============================= */
+/* COLUNAS */
+/* ============================= */
+
+.coluna{
 display:flex;
-flex:1;
-padding:10px;
-gap:10px;
+flex-direction:column;
+gap:12px;
+align-items:flex-end;
 }
 
-/* LADOS */
-.lado{
-flex:1;
+#mesasDireita{
+align-items:flex-start;
 }
 
-.lado h4{
+.cabecalho-lado{
+font-weight:700;
+font-size:14px;
 text-align:center;
-margin-bottom:10px;
+margin-bottom:4px;
 }
 
+
+/* ============================= */
 /* ESTEIRA */
+/* ============================= */
+
 .esteira{
-width:60px;
-background:#333;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
+width:70px;
+background:#353535;
 border-radius:10px;
-font-size:18px;
-}
-
-/* MESAS */
-.mesa{
-background:#fff;
-border:1px solid #ccc;
-padding:8px;
-margin-bottom:10px;
-border-radius:8px;
-}
-
-/* TITULO MESA */
-.numero-mesa{
-font-weight:bold;
-margin-bottom:6px;
-}
-
-/* FANOUTS NA MESA */
-.fanouts-mesa{
-min-height:30px;
 display:flex;
-flex-wrap:wrap;
+flex-direction:column;
+align-items:center;
+justify-content:space-between;
+padding:10px 0;
+height:100%;
+}
+
+.seta{
+font-size:32px;
+color:white;
+}
+
+
+/* ============================= */
+/* MESA */
+/* ============================= */
+
+.mesa{
+width:300px;
+background:#f7f7f7;
+border:1px solid #ddd;
+border-radius:10px;
+padding:8px 10px;
+
+display:flex;
+flex-direction:column;
+gap:4px;
+font-size:13px;
+}
+
+
+/* ============================= */
+/* TITULO */
+/* ============================= */
+
+.numero-mesa{
+font-weight:600;
+font-size:13px;
+}
+
+
+/* ============================= */
+/* FANOUT GRID */
+/* ============================= */
+
+.fanouts-mesa{
+display:grid;
+grid-template-columns:repeat(3,1fr);
 gap:4px;
 }
 
-.fanouts-mesa div{
-background:#007bff;
-color:#fff;
-padding:3px 6px;
-border-radius:4px;
+
+/* ============================= */
+/* FANOUT ITEM */
+/* ============================= */
+
+.fanout-item-mesa{
+background:white;
+border:1px solid #ccc;
+border-radius:5px;
+padding:2px 4px;
 font-size:12px;
+text-align:center;
 }
 
+
+/* ============================= */
+/* INPUT MANUAL */
+/* ============================= */
+
+.input-fanout{
+width:100%;
+box-sizing:border-box;
+font-size:12px;
+padding:2px 4px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+
+/* ============================= */
+/* BOTÃO MANUAL */
+/* ============================= */
+
+.manual-add{
+margin-top:3px;
+font-size:12px;
+color:#0d6efd;
+cursor:pointer;
+}
+
+
+/* ============================= */
 /* POSIÇÕES */
+/* ============================= */
+
 .posicoes{
 font-size:12px;
-margin-top:6px;
-color:#333;
+border-top:1px solid #eee;
+padding-top:2px;
+color:#444;
 }
