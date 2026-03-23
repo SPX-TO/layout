@@ -1,187 +1,298 @@
-/* ============================= */
-/* LAYOUT GERAL */
-/* ============================= */
+/* vaga */
 
-.container{
-display:flex;
-gap:20px;
-padding:10px;
-font-family:Arial, sans-serif;
+/* ========================= */
+/* BASE */
+/* ========================= */
+body{
+background:#f4f4f4;
+font-family:Arial, Helvetica, sans-serif;
+padding-bottom:35px;
+overflow-y:auto;
 }
 
-
-/* ============================= */
-/* FANOUTS ESQUERDA */
-/* ============================= */
-
-.fanouts{
-width:220px;
-}
-
-#listaFanouts{
-margin-top:10px;
-display:flex;
-flex-direction:column;
-gap:6px;
-}
-
-.fanout-item{
-background:#f1f1f1;
+/* ========================= */
+/* TÍTULOS */
+/* ========================= */
+.box-title{
+background:#e9ecef;
 padding:6px;
 border-radius:6px;
+font-size:14px;
+margin-bottom:6px;
 cursor:pointer;
+}
+
+/* ========================= */
+/* INPUT */
+/* ========================= */
+input{
 font-size:13px;
 }
 
-.fanout-item.selecionado{
-background:#0d6efd;
-color:white;
+/* ========================= */
+/* FANOUT BUSCA */
+/* ========================= */
+#listaFanoutsBusca{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+max-height:300px;
+overflow-y:auto;
 }
 
-
-/* ============================= */
-/* AREA ESTEIRA */
-/* ============================= */
-
-.esteira-area{
-display:grid;
-grid-template-columns: auto 70px auto;
-gap:15px;
-align-items:start;
+/* ========================= */
+/* FANOUT SELECIONADOS */
+/* ========================= */
+#listaFanoutsSelecionados{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+min-height:40px;
+max-height:200px;
+overflow-y:auto;
 }
 
+/* BOTÃO FANOUT */
+.fanout-btn{
+display:inline-flex;
+align-items:center;
+gap:6px;
+padding:5px 8px;
+background:#f1f3f5;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:11px;
+cursor:pointer;
+}
 
-/* ============================= */
-/* COLUNAS */
-/* ============================= */
+.fanout-btn:hover{
+background:#e9ecef;
+}
 
-.coluna{
+/* BADGE */
+.badge-fanout{
+background:#6c757d;
+color:#fff;
+font-size:11px;
+padding:2px 6px;
+border-radius:10px;
+font-weight:600;
+}
+
+/* ========================= */
+/* OPERADORES */
+/* ========================= */
+#listaOperadoresBusca{
+max-height:200px;
+overflow-y:auto;
+}
+
+.operador-item{
+padding:6px 10px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-bottom:5px;
+cursor:pointer;
+background:#f8f9fa;
+font-size:13px;
+}
+
+.operador-item:hover{
+background:#e9ecef;
+}
+
+/* TAG OPERADOR */
+.operador-tag{
+background:#dee2e6;
+padding:3px 8px;
+border-radius:6px;
+font-size:12px;
+cursor:grab;
+}
+
+.operador-tag:hover{
+background:#ced4da;
+}
+
+/* ========================= */
+/* COLUNA ESQUERDA */
+/* ========================= */
+.col-md-3{
+background:#f8f9fa;
+border-right:1px solid #ddd;
+padding:10px;
+
 display:flex;
 flex-direction:column;
-gap:12px;
-align-items:flex-end;
+gap:10px;
+
+position:relative;
 }
 
-#mesasDireita{
-align-items:flex-start;
+/* ========================= */
+/* BLOCOS */
+/* ========================= */
+.bloco{
+background:#ffffff;
+border:1px solid #ddd;
+border-radius:10px;
+padding:10px;
+box-shadow:0 2px 4px rgba(0,0,0,0.05);
+
+display:flex;
+flex-direction:column;
 }
 
-.cabecalho-lado{
-font-weight:700;
-font-size:14px;
-text-align:center;
+/* ========================= */
+/* ACCORDION BASE */
+/* ========================= */
+.bloco.recolhido > *:not(.box-title):not(input){
+display:none;
+}
+
+/* ========================= */
+/* SUBIR OPERADORES */
+/* ========================= */
+#blocoOperadores.ativo{
+margin-top:-380px;
+z-index:9;
+position:relative;
+}
+
+/* ========================= */
+/* FUNÇÕES */
+/* ========================= */
+.grupo-funcao{
+margin-top:10px;
+}
+
+.grupo-funcao strong{
+font-size:13px;
+display:block;
 margin-bottom:4px;
 }
 
+.drop-funcao{
+min-height:30px;
+padding:6px;
+border:1px dashed #ccc;
+border-radius:6px;
+background:#f8f9fa;
 
-/* ============================= */
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+}
+
+.drop-funcao:hover{
+background:#e9ecef;
+}
+
+/* ========================= */
+/* CENTRO (SEM MEXER AINDA) */
+/* ========================= */
+.esteira-container{
+display:flex;
+align-items:flex-start;
+gap:10px;
+min-height:400px;
+}
+
+.lado{
+flex:1;
+}
+
 /* ESTEIRA */
-/* ============================= */
-
 .esteira{
 width:70px;
-background:#353535;
-border-radius:10px;
+background:#2f2f2f;
+border-radius:40px;
 display:flex;
-flex-direction:column;
 align-items:center;
-justify-content:space-between;
-padding:10px 0;
-height:100%;
+justify-content:center;
+margin:0 10px;
+min-height:400px;
 }
 
-.seta{
-font-size:32px;
-color:white;
-}
-
-
-/* ============================= */
-/* MESA */
-/* ============================= */
-
-.mesa{
-width:300px;
-background:#f7f7f7;
-border:1px solid #ddd;
-border-radius:10px;
-padding:8px 10px;
-
-display:flex;
-flex-direction:column;
-gap:4px;
-font-size:13px;
-}
-
-
-/* ============================= */
-/* TITULO */
-/* ============================= */
-
-.numero-mesa{
-font-weight:600;
-font-size:13px;
-}
-
-
-/* ============================= */
-/* FANOUT GRID */
-/* ============================= */
-
-.fanouts-mesa{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:4px;
-}
-
-
-/* ============================= */
-/* FANOUT ITEM */
-/* ============================= */
-
-.fanout-item-mesa{
-background:white;
-border:1px solid #ccc;
-border-radius:5px;
-padding:2px 4px;
-font-size:12px;
+.setas{
+color:#fff;
+font-size:70px;
+line-height:100px;
 text-align:center;
 }
 
-
-/* ============================= */
-/* INPUT MANUAL */
-/* ============================= */
-
-.input-fanout{
-width:100%;
-box-sizing:border-box;
-font-size:12px;
-padding:2px 4px;
-border:1px solid #ccc;
-border-radius:4px;
+/* ========================= */
+/* FIX BOOTSTRAP */
+/* ========================= */
+.d-flex{
+min-height:unset !important;
 }
 
+/* ========================= */
+/* TÍTULO LAYOUT */
+/* ========================= */
+.titulo-layout{
+font-size:14px;
+font-weight:600;
+margin-bottom:8px;
+padding:6px 10px;
+background:#e9ecef;
+border-radius:6px;
+}
 
-/* ============================= */
-/* BOTÃO MANUAL */
-/* ============================= */
+/* ========================= */
+/* FOOTER */
+/* ========================= */
+#footerSistema{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
 
-.manual-add{
-margin-top:3px;
+background:#1c1f23;
+border-top:1px solid #343a40;
+color:#fff;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:6px 12px;
 font-size:12px;
+z-index:999;
+}
+
+.footer-left{
+font-weight:600;
+}
+
+.footer-center{
+opacity:0.9;
+}
+
+.footer-right{
 color:#0d6efd;
 cursor:pointer;
+font-weight:500;
+}
+
+.footer-right:hover{
+text-decoration:underline;
+opacity:0.8;
 }
 
 
-/* ============================= */
-/* POSIÇÕES */
-/* ============================= */
-
-.posicoes{
+/* MESA VISUAL BASE */
+.mesa{
+background:#fff;
+border:1px solid #ddd;
+border-radius:8px;
+padding:8px;
+margin-bottom:8px;
 font-size:12px;
-border-top:1px solid #eee;
-padding-top:2px;
-color:#444;
+}
+
+.numero-mesa{
+font-weight:bold;
+margin-bottom:4px;
 }
