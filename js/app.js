@@ -283,10 +283,27 @@ btnAddMesa.click();
 };
 
 
-// clicar no título do fanout também fecha operadores
-blocoFanout.querySelector(".box-title").addEventListener("click",()=>{
 
-blocoOperadores.classList.remove("ativo");
-blocoOperadores.style.marginTop = "0px";
 
-});
+function criarMesa(numero, lado){
+
+const mesa = document.createElement("div");
+mesa.className = "mesa";
+
+mesa.innerHTML = `
+<div class="numero-mesa">Mesa ${numero}</div>
+<div class="fanouts-mesa"></div>
+`;
+
+return mesa;
+
+}
+
+btnAddMesa.onclick = ()=>{
+
+mesasEsquerda.appendChild(criarMesa(contadorMesa,"E"));
+mesasDireita.appendChild(criarMesa(contadorMesa,"D"));
+
+contadorMesa++;
+
+};
