@@ -172,6 +172,33 @@ display:block;
 margin-bottom:4px;
 }
 
+
+.posicoes{
+display:flex;
+gap:10px;
+}
+
+.funcao{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:flex-start;
+
+padding:4px 6px;
+
+border:1px dashed #ccc;
+border-radius:6px;
+background:#f8f9fa;
+
+font-size:12px;
+}
+
+/* label fixa */
+.funcao::before{
+content: attr(data-label);
+font-weight:600;
+margin-right:6px;
+}
 .drop-funcao{
 min-height:30px;
 padding:6px;
@@ -280,7 +307,10 @@ font-weight:500;
 text-decoration:underline;
 opacity:0.8;
 }
-
+.mesa-highlight{
+outline:3px solid #0d6efd;
+background:#e7f1ff;
+}
 
 /* MESA VISUAL BASE */
 .mesa{
@@ -296,3 +326,92 @@ font-size:12px;
 font-weight:bold;
 margin-bottom:4px;
 }
+
+/* vaga */
+
+/* container geral */
+#containerMesas{
+display:flex;
+flex-direction:column;
+
+}
+
+/* cada linha = esquerda + esteira + direita */
+.linha-mesa{
+display:grid;
+grid-template-columns: 1fr 40px 1fr;
+gap:10px;
+align-items:stretch;
+}
+
+/* esteira mais estreita */
+.esteira-mini{
+background:#2f2f2f;
+
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;
+color:#fff;
+}
+
+/* mesa */
+.mesa{
+background:#fff;
+border:1px solid #ddd;
+border-radius:8px;
+padding:6px;
+font-size:12px;
+min-height:60px;
+}
+
+.numero-mesa{
+font-weight:bold;
+margin-bottom:4px;
+}
+
+/* vaga */
+
+/* área maior pra drop */
+.fanouts-mesa{
+min-height:60px;
+padding:6px;
+border:1px dashed #ccc;
+border-radius:6px;
+}
+
+/* fanout visual melhor */
+.fanouts-mesa div{
+background:#dee2e6;
+padding:4px 8px;
+border-radius:6px;
+font-size:13px;
+cursor:grab;
+}
+
+/* badge cores */
+.badge-fanout{
+padding:2px 6px;
+border-radius:10px;
+font-size:11px;
+margin-left:6px;
+color:#fff;
+}
+/* vaga */
+
+.fanouts-mesa{
+display:flex !important;
+flex-wrap:wrap !important;
+gap:6px;
+margin:6px 0;
+}
+
+.fanouts-mesa div{
+display:inline-block;
+background:#dee2e6;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+white-space:nowrap;
+}
+
