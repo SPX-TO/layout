@@ -81,7 +81,7 @@ return;
 }
 
 // registrar busca
-// await db.from("search_logs").insert([{ termo }]);
+await db.from("search_logs").insert([{ termo }]);
 resultsContainer.innerHTML = "<div class='buscando'>Buscando...</div>";
 resultadoCard.style.display = "block";
 
