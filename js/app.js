@@ -8,360 +8,567 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ===============================
-const btnAddMesa = document.getElementById("btnAddMesa");
-const containerMesas = document.getElementById("containerMesas");
-
-const fanoutInput = document.getElementById("fanoutInput");
-const listaBusca = document.getElementById("listaFanoutsBusca");
-const listaSelecionados = document.getElementById("listaFanoutsSelecionados");
-
-const buscaOperador = document.getElementById("buscaOperador");
-const listaOperadoresBusca = document.getElementById("listaOperadoresBusca");
-
-// ===============================
 let contadorMesa = 1;
 let todosFanouts = [];
 let todosOperadores = [];
 let contagemFanout = {};
+const STORAGE_KEY = "layout_esteira_autosave";
+// ===============================
+const btnAddMesa = document.getElementById("btnAddMesa");
+const containerMesas = document.getElementById("containerMesas");
+
+const fanoutInput = document.getElementById("fanoutInput");
+const listaFanoutsBusca = document.getElementById("listaFanoutsBusca");
+const listaFanoutsSelecionados = document.getElementById("listaFanoutsSelecionados");
+
+const buscaOperador = document.getElementById("buscaOperador");
+const btnSalvarLayout = document.getElementById("btnSalvarLayout");
+const btnCarregarLayout = document.getElementById("btnCarregarLayout");
+const btnNovoLayout = document.getElementById("btnNovoLayout");
 
 // ===============================
-function normalizarFanout(codigo){
-return codigo.replace("XPT-","");
-}
-
-function formatarNome(nome){
-const partes = nome.split(" ");
-return partes[0] + " " + partes[partes.length-1][0] + ".";
-}
-
-// ===============================
-// BADGE
-// ===============================
-function atualizarBadge(codigo){
-
-let valor = Number(contagemFanout[codigo] || 0);
-
-document.querySelectorAll(".fanout-btn").forEach(btn=>{
-
-const span = btn.querySelector("span");
-if(!span) return;
-
-if(span.innerText.trim() === codigo){
-
-const badge = btn.querySelector(".badge-fanout");
-if(!badge) return;
-
-badge.innerText = valor;
-
-// força cor
-if(valor === 0) badge.style.cssText = "background:#6c757d;color:#fff;";
-else if(valor === 1) badge.style.cssText = "background:#dc3545;color:#fff;";
-else if(valor === 2) badge.style.cssText = "background:#0d6efd;color:#fff;";
-else if(valor === 3) badge.style.cssText = "background:#198754;color:#fff;";
-else badge.style.cssText = "background:#6f42c1;color:#fff;";
-
-}
-
-});
-
+function formatarNome(nome) {
+  const partes = nome.trim().split(" ");
+  if (partes.length === 1) return partes[0];
+  return partes[0] + " " + partes[partes.length - 1][0] + ".";
 }
 
 // ===============================
-// REMOVER DA BUSCA
+// FANOUT
 // ===============================
-function removerDaBusca(codigo){
+function criarFanoutTag(codigo) {
 
-document.querySelectorAll("#listaFanoutsBusca .fanout-btn").forEach(btn=>{
+  const div = document.createElement("div");
+  div.className = "fanout-tag";
 
-const span = btn.querySelector("span");
-if(!span) return;
+  const span = document.createElement("span");
+span.className = "fanout-codigo";
+span.innerText = codigo;
 
-if(span.innerText === codigo){
-btn.remove();
+  const badge = document.createElement("span");
+  badge.className = "badge-fanout badge-0";
+  badge.innerText = "0";
+
+  div.appendChild(span);
+  div.appendChild(badge);
+
+  div.setAttribute("draggable", true);
+
+  div.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("fanout", codigo);
+  });
+  div.addEventListener("mouseenter", () => {
+
+    document.querySelectorAll(".mesa").forEach(mesa => {
+
+      const existe = Array.from(
+        mesa.querySelectorAll(".fanout-tag span")
+      ).some(span => span.innerText === codigo);
+
+      if (existe) {
+        mesa.classList.add("highlight-mesa");
+      }
+
+    });
+
+  });
+
+  div.addEventListener("mouseleave", () => {
+
+    document.querySelectorAll(".mesa")
+      .forEach(m => m.classList.remove("highlight-mesa"));
+
+  });
+
+  return div;
 }
 
-});
+function adicionarSelecionado(codigo) {
 
+  const existe = Array.from(listaFanoutsSelecionados.children)
+    .some(el => 
+el.querySelector(".fanout-codigo")?.innerText === codigo
+);
+
+  if (existe) return;
+
+  const tag = criarFanoutTag(codigo);
+  listaFanoutsSelecionados.appendChild(tag);
+}
+
+function atualizarBadge() {
+
+  document.querySelectorAll(".fanout-tag").forEach(tag => {
+
+    const codigo = tag.querySelector(".fanout-codigo")?.innerText;
+    if (!codigo) return;
+
+    const count = contagemFanout[codigo] || 0;
+    const badge = tag.querySelector(".badge-fanout");
+    if(!badge) return;
+    badge.innerText = count;
+
+    badge.classList.remove("badge-0", "badge-1", "badge-2", "badge-3", "badge-4");
+
+    if (count === 0) badge.classList.add("badge-0");
+    else if (count === 1) badge.classList.add("badge-1");
+    else if (count === 2) badge.classList.add("badge-2");
+    else if (count === 3) badge.classList.add("badge-3");
+    else badge.classList.add("badge-4");
+
+  });
 }
 
 // ===============================
-// SELECIONADOS
+// BUSCA FANOUT
 // ===============================
-function adicionarSelecionado(codigo){
+fanoutInput.addEventListener("input", () => {
 
-const existe = Array.from(listaSelecionados.children)
-.some(el => el.querySelector("span")?.innerText === codigo);
+  const termo = fanoutInput.value.toUpperCase().trim();
+  listaFanoutsBusca.innerHTML = "";
 
-if(existe) return;
+  if (!termo) return;
 
-const div = document.createElement("div");
-div.className = "fanout-btn";
-div.setAttribute("draggable", true);
+  const filtrados = todosFanouts.filter(f => f.includes(termo));
 
-div.innerHTML = `
-<span>${codigo}</span>
-<span class="badge-fanout">${contagemFanout[codigo] || 0}</span>
-`;
+  const grid = document.createElement("div");
+  grid.className = "fanout-grid";
 
-div.addEventListener("dragstart",(e)=>{
-e.dataTransfer.setData("fanout", codigo);
-e.dataTransfer.effectAllowed = "move";
-});
+  filtrados.forEach(codigo => {
 
-listaSelecionados.appendChild(div);
-atualizarBadge(codigo);
-}
+    const div = document.createElement("div");
+    div.className = "fanout-chip";
 
-// ===============================
-// BUSCA
-// ===============================
-fanoutInput.addEventListener("input",()=>{
+    const span = document.createElement("span");
+    span.innerText = codigo;
 
-const termo = fanoutInput.value.toUpperCase();
-listaBusca.innerHTML = "";
+    const badge = document.createElement("span");
+    badge.className = "badge-fanout badge-0";
+    badge.innerText = "0";
 
-if(termo.length < 2) return;
+    div.appendChild(span);
+    div.appendChild(badge);
 
-const filtrados = todosFanouts.filter(f => f.includes(termo));
+    div.addEventListener("click", () => {
 
-filtrados.forEach(f=>{
+      adicionarSelecionado(codigo);
 
-const codigo = normalizarFanout(f);
+      div.remove();
 
-const div = document.createElement("div");
-div.className = "fanout-btn";
-div.setAttribute("draggable", true);
+    });
 
-div.innerHTML = `
-<span>${codigo}</span>
-<span class="badge-fanout">${contagemFanout[codigo] || 0}</span>
-`;
+    div.setAttribute("draggable", true);
+    div.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("fanout", codigo);
 
-div.addEventListener("dragstart",(e)=>{
-e.dataTransfer.setData("fanout", codigo);
-e.dataTransfer.effectAllowed = "move";
-});
+      setTimeout(() => {
+        div.remove();
+      }, 0);
 
-div.onclick = ()=>{
-adicionarSelecionado(codigo);
-removerDaBusca(codigo);
-};
+      adicionarSelecionado(codigo);
 
-listaBusca.appendChild(div);
-atualizarBadge(codigo);
+    });
 
-});
+    grid.appendChild(div);
+
+  });
+
+  listaFanoutsBusca.appendChild(grid);
 
 });
 
 // ===============================
 // OPERADORES
 // ===============================
-function renderOperadores(lista){
+function criarTag(nome) {
 
-listaOperadoresBusca.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "operador-tag";
+  div.innerText = formatarNome(nome);
 
-lista.forEach(op=>{
+  div.setAttribute("draggable", true);
 
-const nome = op.nome + " " + op.sobrenome;
-const curto = formatarNome(nome);
+  div.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("operador", nome);
+  });
 
-const div = document.createElement("div");
-div.className = "operador-item";
-div.innerText = curto;
-
-div.setAttribute("draggable", true);
-
-div.addEventListener("dragstart",(e)=>{
-e.dataTransfer.setData("operador", nome);
-});
-
-listaOperadoresBusca.appendChild(div);
-
-});
+  return div;
 }
 
-buscaOperador.addEventListener("input",()=>{
+function renderOperadores(lista) {
 
-const termo = buscaOperador.value.toLowerCase();
+  const destino = document.querySelector('[data-funcao="sem_funcao"]');
+  destino.innerHTML = "";
 
-const filtrados = todosOperadores.filter(op =>
-(op.nome + " " + op.sobrenome).toLowerCase().includes(termo)
-);
+  lista.sort((a, b) => a.nome.localeCompare(b.nome));
 
-renderOperadores(filtrados);
+  lista.forEach(op => {
+    destino.appendChild(criarTag(op.nome));
+  });
+}
+
+buscaOperador.addEventListener("input", () => {
+
+  const termo = buscaOperador.value.toLowerCase();
+
+  const filtrados = todosOperadores.filter(op =>
+    (op.nome || "").toLowerCase().includes(termo)
+  );
+
+  renderOperadores(filtrados);
 
 });
 
 // ===============================
 // MESA
 // ===============================
-function criarLinhaMesa(numero){
+function criarLinhaMesa(numero) {
 
-const linha = document.createElement("div");
-linha.className = "linha-mesa";
+  const linha = document.createElement("div");
+  linha.className = "linha-mesa";
 
-linha.innerHTML = `
+  linha.innerHTML = `
 <div class="mesa">
-<div class="numero-mesa">Mesa ${numero} E</div>
-<div class="fanouts-mesa"></div>
-
-<div class="posicoes">
-<div class="funcao drop-pesca">Pesca:</div>
-<div class="funcao drop-bipe">Bipe:</div>
+  <div class="numero-mesa">Mesa ${numero} Esquerda</div>
+  <div class="fanouts-mesa"></div>
+  <div class="posicoes">
+    <div class="funcao drop-pesca">Pesca:</div>
+    <div class="funcao drop-bipe">Bipe:</div>
+  </div>
 </div>
-</div>
 
-<div class="esteira-mini">↓</div>
+<div></div>
 
 <div class="mesa">
-<div class="numero-mesa">Mesa ${numero} D</div>
-<div class="fanouts-mesa"></div>
-
-<div class="posicoes">
-<div class="funcao drop-pesca">Pesca:</div>
-<div class="funcao drop-bipe">Bipe:</div>
-</div>
+  <div class="numero-mesa">Mesa ${numero} Direita</div>
+  <div class="fanouts-mesa"></div>
+  <div class="posicoes">
+    <div class="funcao drop-pesca">Pesca:</div>
+    <div class="funcao drop-bipe">Bipe:</div>
+  </div>
 </div>
 `;
 
-linha.querySelectorAll(".mesa").forEach(mesa=>{
+  // ===============================
+  // FANOUT DROP
+  // ===============================
+  linha.querySelectorAll(".fanouts-mesa").forEach(area => {
 
-const container = mesa.querySelector(".fanouts-mesa");
+    area.addEventListener("dragover", (e) => e.preventDefault());
 
-mesa.addEventListener("dragover",(e)=> e.preventDefault());
+    area.addEventListener("drop", (e) => {
 
-mesa.addEventListener("drop",(e)=>{
+      e.preventDefault();
 
-e.preventDefault();
+      const codigo = e.dataTransfer.getData("fanout");
+      if (!codigo) return;
 
-const valor = e.dataTransfer.getData("fanout");
-if(!valor) return;
+      const existe = Array.from(area.children)
+        .some(el =>
+el.querySelector(".fanout-codigo")?.innerText === codigo
+);
 
-const jaExiste = Array.from(container.children)
-.some(el => el.innerText === valor);
+      if (existe) return;
 
-if(jaExiste) return;
+      const tag = criarFanoutTag(codigo);
+      area.appendChild(tag);
 
-const item = document.createElement("div");
-item.innerText = valor;
-item.setAttribute("draggable", true);
+      adicionarSelecionado(codigo);
 
-item.addEventListener("dragstart",(e)=>{
-e.dataTransfer.setData("fanout", valor);
-e.dataTransfer.effectAllowed = "move";
-});
+      contagemFanout[codigo] = (contagemFanout[codigo] || 0) + 1;
 
-// badge
-contagemFanout[valor] = (contagemFanout[valor] || 0) + 1;
-atualizarBadge(valor);
+      atualizarBadge();
+      salvarAutosave();
+    });
 
-// selecionados + remove busca
-adicionarSelecionado(valor);
-removerDaBusca(valor);
+  });
 
-container.appendChild(item);
+  // ===============================
+  // OPERADOR DROP (MESA)
+  // ===============================
+  linha.querySelectorAll(".drop-pesca, .drop-bipe").forEach(area => {
 
-});
+    area.addEventListener("dragover", (e) => e.preventDefault());
 
-});
+    area.addEventListener("drop", (e) => {
 
-// OPERADOR
-linha.querySelectorAll(".drop-pesca, .drop-bipe").forEach(area=>{
+      e.preventDefault();
 
-area.addEventListener("dragover",(e)=> e.preventDefault());
+      const nome = e.dataTransfer.getData("operador");
+      if (!nome) return;
 
-area.addEventListener("drop",(e)=>{
+      const curto = formatarNome(nome);
 
-e.preventDefault();
+      // remove de todas mesas
+      document.querySelectorAll(".drop-pesca, .drop-bipe").forEach(a => {
+        Array.from(a.children).forEach(el => {
+          if (el.innerText === curto) el.remove();
+        });
+      });
 
-const nome = e.dataTransfer.getData("operador");
-if(!nome) return;
+      // pesca = único
+      if (area.classList.contains("drop-pesca")) {
+        area.innerHTML = "Pesca:";
+      }
 
-const curto = formatarNome(nome);
+      area.appendChild(criarTag(nome));
+      salvarAutosave();
+    });
 
-area.innerHTML = area.classList.contains("drop-pesca") ? "Pesca: " : "Bipe: ";
+  });
 
-const tag = document.createElement("span");
-tag.className = "operador-tag";
-tag.innerText = curto;
-
-area.appendChild(tag);
-
-});
-
-});
-
-return linha;
-
+  return linha;
 }
+
+// ===============================
+// DROP NAS FUNÇÕES (COLUNA ESQ)
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll(".drop-funcao").forEach(area => {
+
+    area.addEventListener("dragover", (e) => e.preventDefault());
+
+    area.addEventListener("drop", (e) => {
+
+      e.preventDefault();
+
+      const nome = e.dataTransfer.getData("operador");
+      if (!nome) return;
+
+      const curto = formatarNome(nome);
+
+      // remove de mesas
+      document.querySelectorAll(".drop-pesca, .drop-bipe").forEach(a => {
+        Array.from(a.children).forEach(el => {
+          if (el.innerText === curto) el.remove();
+        });
+      });
+
+      // remove de funções
+      document.querySelectorAll(".drop-funcao").forEach(f => {
+        Array.from(f.children).forEach(el => {
+          if (el.innerText === curto) el.remove();
+        });
+      });
+
+      // adiciona na função
+      area.appendChild(criarTag(nome));
+
+    });
+
+  });
+
+});
 
 // ===============================
 btnAddMesa.onclick = ()=>{
 containerMesas.appendChild(criarLinhaMesa(contadorMesa));
 contadorMesa++;
+
+salvarAutosave();
 };
-
+btnSalvarLayout.onclick = salvarLayout;
+btnNovoLayout.onclick = novoLayout;
 // ===============================
-async function carregarFanouts(){
+// CARREGAR
+// ===============================
+async function carregarFanouts() {
+  const { data } = await db.from("tos").select("codigo");
+  todosFanouts = (data || []).map(f => f.codigo);
+}
 
-const { data } = await db
-.from("tos")
-.select("codigo")
-.order("codigo");
+async function carregarOperadores() {
+  const { data } = await db.from("operadores").select("*");
+  todosOperadores = data || [];
+  renderOperadores(todosOperadores);
+}
+function salvarAutosave() {
 
-todosFanouts = data.map(f=>f.codigo);
+  const mesas = [];
+
+  document.querySelectorAll(".linha-mesa").forEach(linha => {
+
+    const mesasLinha = linha.querySelectorAll(".mesa");
+
+    mesasLinha.forEach(mesa => {
+
+      const titulo = mesa.querySelector(".numero-mesa")?.innerText;
+
+      const fanouts = Array.from(
+        mesa.querySelectorAll(".fanouts-mesa .fanout-codigo")
+      ).map(el => el.innerText);
+
+      const pesca = Array.from(
+        mesa.querySelectorAll(".drop-pesca .operador-tag")
+      ).map(el => el.innerText);
+
+      const bipe = Array.from(
+        mesa.querySelectorAll(".drop-bipe .operador-tag")
+      ).map(el => el.innerText);
+
+      mesas.push({
+        titulo,
+        fanouts,
+        pesca,
+        bipe
+      });
+
+    });
+
+  });
+  console.log("AUTOSAVE", mesas);
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(mesas)
+  );
+
+}
+async function salvarLayout() {
+
+  const nome = prompt("Nome do layout:");
+
+  if (!nome) return;
+
+  const mesas = [];
+
+  document.querySelectorAll(".linha-mesa").forEach(linha => {
+
+    const mesasLinha = linha.querySelectorAll(".mesa");
+
+    mesasLinha.forEach(mesa => {
+
+      const titulo = mesa.querySelector(".numero-mesa")?.innerText;
+
+      const fanouts = Array.from(
+        mesa.querySelectorAll(".fanouts-mesa .fanout-tag span")
+      ).map(el => el.innerText);
+
+      const pesca = Array.from(
+        mesa.querySelectorAll(".drop-pesca .operador-tag")
+      ).map(el => el.innerText);
+
+      const bipe = Array.from(
+        mesa.querySelectorAll(".drop-bipe .operador-tag")
+      ).map(el => el.innerText);
+
+      mesas.push({
+        titulo,
+        fanouts,
+        pesca,
+        bipe
+      });
+
+    });
+
+  });
+
+  await db.from("layouts_esteira").insert([{
+    nome,
+    dados: mesas
+  }]);
+
+  alert("Layout salvo");
+
+}
+function novoLayout() {
+
+  const confirmar = confirm(
+    "Limpar layout atual e começar novo?"
+  );
+
+  if (!confirmar) return;
+
+  containerMesas.innerHTML = "";
+
+listaFanoutsSelecionados.innerHTML = "";
+
+contagemFanout = {};
+
+localStorage.removeItem(STORAGE_KEY);
+
+contadorMesa = 1;
+
+  btnAddMesa.click();
+
+}
+function restaurarAutosave(){
+
+const salvo = localStorage.getItem(STORAGE_KEY);
+
+if(!salvo) return false;
+
+const mesas = JSON.parse(salvo);
+
+containerMesas.innerHTML = "";
+
+contadorMesa = 1;
+contagemFanout = {};
+listaFanoutsSelecionados.innerHTML = "";
+
+for(let i = 0; i < mesas.length; i += 2){
+
+const numero = (i / 2) + 1;
+
+const linha = criarLinhaMesa(numero);
+
+containerMesas.appendChild(linha);
+
+const mesaEsquerda = linha.querySelectorAll(".mesa")[0];
+const mesaDireita = linha.querySelectorAll(".mesa")[1];
+
+const dadosEsquerda = mesas[i];
+const dadosDireita = mesas[i + 1];
+
+if(dadosEsquerda){
+
+const area = mesaEsquerda.querySelector(".fanouts-mesa");
+
+dadosEsquerda.fanouts.forEach(codigo=>{
+
+console.log("ESQ", codigo);
+
+adicionarSelecionado(codigo);
+area.appendChild(criarFanoutTag(codigo));
+contagemFanout[codigo] =
+(contagemFanout[codigo] || 0) + 1;
+});
 
 }
 
-async function carregarOperadores(){
+if(dadosDireita){
 
-todosOperadores = [
-{ nome: "Luciano", sobrenome: "Bento" },
-{ nome: "Maria", sobrenome: "Silva" },
-{ nome: "João", sobrenome: "Souza" },
-{ nome: "Carlos", sobrenome: "Oliveira" }
-];
+const area = mesaDireita.querySelector(".fanouts-mesa");
 
-renderOperadores(todosOperadores);
+dadosDireita.fanouts.forEach(codigo=>{
+
+console.log("DIR", codigo);
+
+adicionarSelecionado(codigo);
+area.appendChild(criarFanoutTag(codigo));
+contagemFanout[codigo] =
+(contagemFanout[codigo] || 0) + 1;
+});
 
 }
 
+contadorMesa++;
+
+}
+atualizarBadge();
+return true;
+
+}
 // ===============================
 window.onload = ()=>{
+
 carregarFanouts();
 carregarOperadores();
+
+const restaurou = restaurarAutosave();
+
+if(!restaurou){
 btnAddMesa.click();
-};
-
-// ===============================
-// HIGHLIGHT
-// ===============================
-document.addEventListener("mouseover",(e)=>{
-
-const alvo = e.target.closest(".fanout-btn, .fanouts-mesa div");
-if(!alvo) return;
-
-const codigo = alvo.innerText.trim();
-
-document.querySelectorAll(".mesa-highlight")
-.forEach(el=> el.classList.remove("mesa-highlight"));
-
-document.querySelectorAll(".mesa").forEach(mesa=>{
-
-const tem = Array.from(
-mesa.querySelectorAll(".fanouts-mesa div")
-).some(el => el.innerText.trim() === codigo);
-
-if(tem){
-mesa.classList.add("mesa-highlight");
 }
 
-});
-
-});
-
-document.addEventListener("mouseout",()=>{
-document.querySelectorAll(".mesa-highlight")
-.forEach(el=> el.classList.remove("mesa-highlight"));
-});
+};

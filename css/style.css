@@ -1,417 +1,248 @@
-/* vaga */
-
-/* ========================= */
-/* BASE */
-/* ========================= */
 body{
 background:#f4f4f4;
-font-family:Arial, Helvetica, sans-serif;
-padding-bottom:35px;
-overflow-y:auto;
+font-family:Arial;
+margin:0;
+overflow:hidden;
 }
 
-/* ========================= */
-/* TÍTULOS */
-/* ========================= */
-.box-title{
-background:#e9ecef;
-padding:6px;
-border-radius:6px;
-font-size:14px;
-margin-bottom:6px;
-cursor:pointer;
-}
-
-/* ========================= */
-/* INPUT */
-/* ========================= */
-input{
-font-size:13px;
-}
-
-/* ========================= */
-/* FANOUT BUSCA */
-/* ========================= */
-#listaFanoutsBusca{
-display:flex;
-flex-wrap:wrap;
-gap:6px;
-max-height:300px;
-overflow-y:auto;
-}
-
-/* ========================= */
-/* FANOUT SELECIONADOS */
-/* ========================= */
-#listaFanoutsSelecionados{
-display:flex;
-flex-wrap:wrap;
-gap:6px;
-min-height:40px;
-max-height:200px;
-overflow-y:auto;
-}
-
-/* BOTÃO FANOUT */
-.fanout-btn{
-display:inline-flex;
-align-items:center;
-gap:6px;
-padding:5px 8px;
-background:#f1f3f5;
-border:1px solid #ddd;
-border-radius:8px;
-font-size:11px;
-cursor:pointer;
-}
-
-.fanout-btn:hover{
-background:#e9ecef;
-}
-
-/* BADGE */
-.badge-fanout{
-background:#6c757d;
-color:#fff;
-font-size:11px;
-padding:2px 6px;
-border-radius:10px;
-font-weight:600;
-}
-
-/* ========================= */
-/* OPERADORES */
-/* ========================= */
-#listaOperadoresBusca{
-max-height:200px;
-overflow-y:auto;
-}
-
-.operador-item{
-padding:6px 10px;
-border:1px solid #ddd;
-border-radius:8px;
-margin-bottom:5px;
-cursor:pointer;
-background:#f8f9fa;
-font-size:13px;
-}
-
-.operador-item:hover{
-background:#e9ecef;
-}
-
-/* TAG OPERADOR */
-.operador-tag{
-background:#dee2e6;
-padding:3px 8px;
-border-radius:6px;
-font-size:12px;
-cursor:grab;
-}
-
-.operador-tag:hover{
-background:#ced4da;
-}
-
-/* ========================= */
-/* COLUNA ESQUERDA */
-/* ========================= */
-.col-md-3{
+/* SIDEBAR FIXA */
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:260px;
+height:100vh;
 background:#f8f9fa;
 border-right:1px solid #ddd;
-padding:10px;
-
-display:flex;
-flex-direction:column;
-gap:10px;
-
-position:relative;
+padding:8px;
+overflow-y:auto;
+font-size:11px;
 }
 
-/* ========================= */
-/* BLOCOS */
-/* ========================= */
-.bloco{
-background:#ffffff;
-border:1px solid #ddd;
-border-radius:10px;
-padding:10px;
-box-shadow:0 2px 4px rgba(0,0,0,0.05);
-
-display:flex;
-flex-direction:column;
+/* CONTEÚDO ROLA */
+.main-content{
+margin-left:260px;
+height:100vh;
+overflow-y:auto;
+padding:8px;
 }
 
-/* ========================= */
-/* ACCORDION BASE */
-/* ========================= */
-.bloco.recolhido > *:not(.box-title):not(input){
-display:none;
+/* OPERADORES */
+.operador-item{
+padding:5px;
+border:1px solid #ccc;
+margin-bottom:3px;
+cursor:pointer;
+background:#eee;
+font-size:11px;
+text-align: center;
 }
 
-/* ========================= */
-/* SUBIR OPERADORES */
-/* ========================= */
-#blocoOperadores.ativo{
-margin-top:-380px;
-z-index:9;
-position:relative;
+.operador-tag{
+background:#e0e0e0;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding:4px 6px;
+border-radius: 8px;
+border:1px solid #999;
+font-size: 11px;
+color: #000;
+font-weight: 600;
+border-radius:4x;
+font-size:11px;
+cursor:grab;
+user-select: none;
 }
 
-/* ========================= */
 /* FUNÇÕES */
-/* ========================= */
-.grupo-funcao{
-margin-top:10px;
-}
-
-.grupo-funcao strong{
-font-size:13px;
-display:block;
+.drop-funcao{
+min-height:22px;
+border:1px dashed #ccc;
+padding:3px;
+display:flex;
+flex-wrap:wrap;
+gap:3px;
 margin-bottom:4px;
 }
 
+/* MESA */
+.linha-mesa{
+display:grid;
+grid-template-columns:1fr 30px 1fr;
+gap:6px;
+margin-bottom:5px;
+}
 
+.mesa{
+background:#fff;
+border:1px solid #ddd;
+padding:4px;
+font-size:10px;
+border-radius:8px;
+}
+
+/* PESCA + BIPE NA MESMA LINHA */
 .posicoes{
 display:flex;
-gap:10px;
+gap:4px;
 }
 
 .funcao{
 flex:1;
-display:flex;
-align-items:center;
-justify-content:flex-start;
-
-padding:4px 6px;
-
 border:1px dashed #ccc;
-border-radius:6px;
-background:#f8f9fa;
-
-font-size:12px;
-}
-
-/* label fixa */
-.funcao::before{
-content: attr(data-label);
-font-weight:600;
-margin-right:6px;
-}
-.drop-funcao{
-min-height:30px;
-padding:6px;
-border:1px dashed #ccc;
-border-radius:6px;
-background:#f8f9fa;
-
+padding:2px;
+min-height:20px;
 display:flex;
 flex-wrap:wrap;
-gap:5px;
+gap:2px;
 }
 
-.drop-funcao:hover{
-background:#e9ecef;
+#listaOperadoresBusca{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:4px;
+max-height:250px;
+overflow-y:auto;
 }
 
-/* ========================= */
-/* CENTRO (SEM MEXER AINDA) */
-/* ========================= */
-.esteira-container{
+#listaOperadoresSelecionados{
 display:flex;
-align-items:flex-start;
-gap:10px;
-min-height:400px;
+flex-wrap:wrap;
+gap:4px;
 }
-
-.lado{
-flex:1;
-}
-
-/* ESTEIRA */
-.esteira{
-width:70px;
-background:#2f2f2f;
-border-radius:40px;
+.fanouts-mesa{
+min-height:40px;
+border:1px dashed #ccc;
+padding:4px;
+margin-bottom:4px;
 display:flex;
-align-items:center;
-justify-content:center;
-margin:0 10px;
-min-height:400px;
+flex-wrap:wrap;
+gap:3px;
+}
+[data-funcao="sem_funcao"]{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:4px;
+max-height:500px;
+overflow-y:auto;
+padding-right: 4px;
 }
 
-.setas{
-color:#fff;
-font-size:70px;
-line-height:100px;
-text-align:center;
+.operador-tag:hover{
+    background: #d0d0d0;
+    
 }
-
-/* ========================= */
-/* FIX BOOTSTRAP */
-/* ========================= */
-.d-flex{
-min-height:unset !important;
+.operador-tag:active{
+    cursor: grabbing;
 }
-
-/* ========================= */
-/* TÍTULO LAYOUT */
-/* ========================= */
-.titulo-layout{
-font-size:14px;
-font-weight:600;
-margin-bottom:8px;
-padding:6px 10px;
-background:#e9ecef;
-border-radius:6px;
-}
-
-/* ========================= */
-/* FOOTER */
-/* ========================= */
-#footerSistema{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-
-background:#1c1f23;
-border-top:1px solid #343a40;
-color:#fff;
-
+.fanout-btn{
 display:flex;
 justify-content:space-between;
 align-items:center;
-
-padding:6px 12px;
-font-size:12px;
-z-index:999;
-}
-
-.footer-left{
-font-weight:600;
-}
-
-.footer-center{
-opacity:0.9;
-}
-
-.footer-right{
-color:#0d6efd;
-cursor:pointer;
-font-weight:500;
-}
-
-.footer-right:hover{
-text-decoration:underline;
-opacity:0.8;
-}
-.mesa-highlight{
-outline:3px solid #0d6efd;
-background:#e7f1ff;
-}
-
-/* MESA VISUAL BASE */
-.mesa{
+padding:4px 6px;
+border:1px solid #000;
 background:#fff;
-border:1px solid #ddd;
-border-radius:8px;
-padding:8px;
-margin-bottom:8px;
-font-size:12px;
-}
-
-.numero-mesa{
-font-weight:bold;
-margin-bottom:4px;
-}
-
-/* vaga */
-
-/* container geral */
-#containerMesas{
-display:flex;
-flex-direction:column;
-
-}
-
-/* cada linha = esquerda + esteira + direita */
-.linha-mesa{
-display:grid;
-grid-template-columns: 1fr 40px 1fr;
-gap:10px;
-align-items:stretch;
-}
-
-/* esteira mais estreita */
-.esteira-mini{
-background:#2f2f2f;
-
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:12px;
-color:#fff;
-}
-
-/* mesa */
-.mesa{
-background:#fff;
-border:1px solid #ddd;
-border-radius:8px;
-padding:6px;
-font-size:12px;
-min-height:60px;
-}
-
-.numero-mesa{
-font-weight:bold;
-margin-bottom:4px;
-}
-
-/* vaga */
-
-/* área maior pra drop */
-.fanouts-mesa{
-min-height:60px;
-padding:6px;
-border:1px dashed #ccc;
-border-radius:6px;
-}
-
-/* fanout visual melhor */
-.fanouts-mesa div{
-background:#dee2e6;
-padding:4px 8px;
-border-radius:6px;
-font-size:13px;
-cursor:grab;
-}
-
-/* badge cores */
-.badge-fanout{
-padding:2px 6px;
-border-radius:10px;
 font-size:11px;
-margin-left:6px;
+margin-bottom:3px;
+cursor:pointer;
+}
+
+.badge-fanout{
+background:#444;
 color:#fff;
+border-radius:10px;
+padding:1px 6px;
+font-size:10px;
+font-weight: 600;
+text-align: center;
 }
-/* vaga */
-
-.fanouts-mesa{
-display:flex !important;
-flex-wrap:wrap !important;
+/* CHIP TO */
+.fanout-tag{
+display:flex;
+justify-content:space-between;
+align-items:center;
 gap:6px;
-margin:6px 0;
+padding:4px 6px;
+background:#e0e0e0;
+border:1px solid #999;
+border-radius:8px;
+font-size:11px;
+cursor:grab;
+user-select:none;
+}
+#abaFanout small{
+display:block;
+margin:6px 0 4px;
+font-size:11px;
+color:#666;
+}
+#listaFanoutsSelecionados{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:4px;
+max-height:300px;
+overflow-y:auto;
+padding-right:4px;
+}
+/* CORES */
+.badge-0{ background:#888; }
+.badge-1{ background:#d9534f; }
+.badge-2{ background:#0275d8; }
+.badge-3{ background:#5cb85c; }
+.badge-4{ background:#6f42c1; }
+.fanout-tag:active{
+cursor:grabbing;
 }
 
-.fanouts-mesa div{
-display:inline-block;
-background:#dee2e6;
-padding:4px 8px;
-border-radius:6px;
-font-size:12px;
-white-space:nowrap;
+/* TO destacada */
+.fanout-tag.highlight{
+outline:2px solid orange;
+background:#fff3cd;
 }
 
+/* mesa destacada */
+.mesa.highlight-mesa{
+outline:2px solid #ff9800;
+background:#fff8dc;
+box-shadow:0 0 8px rgba(255,152,0,0.35);
+}
+.fanout-tag:hover{
+background:#d0d0d0;
+}
+
+.fanout-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:4px;
+padding: 6px;
+}
+#listaFanoutsBusca{
+max-height:300px;
+overflow-y:auto;
+padding-right:4px;
+}
+
+#listaFanoutsBusca .fanout-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:4px;
+}
+
+.fanout-chip{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:4px 6px;
+background:#e0e0e0;
+border-radius:8px;
+font-size:11px;
+border:1px solid #999;
+cursor:grabbing;
+user-select: none;
+}
+
+.fanout-chip:hover{
+background:#d8d8d8;
+border-color:#777;
+}
