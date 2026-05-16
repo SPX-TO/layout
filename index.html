@@ -5,6 +5,8 @@
 <title>Layout Esteira</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -23,6 +25,7 @@
         Fanouts
       </button>
     </li>
+
     <li class="nav-item">
       <button class="nav-link"
               data-bs-toggle="tab"
@@ -37,80 +40,152 @@
 
     <!-- FANOUT -->
     <div id="abaFanout" class="tab-pane fade show active">
+
       <div class="bloco">
+
         <div class="fw-bold box-title">Fan-outs</div>
 
-        <input id="fanoutInput" class="form-control mt-2 mb-2" placeholder="Buscar fan-out">
+        <input id="fanoutInput"
+               class="form-control mt-2 mb-2"
+               placeholder="Buscar fan-out">
 
         <div id="listaFanoutsBusca"></div>
 
         <hr>
 
         <small class="text-muted">Selecionados</small>
+
         <div id="listaFanoutsSelecionados"></div>
+
       </div>
+
     </div>
 
     <!-- OPERADORES -->
     <div id="abaOperadores" class="tab-pane fade">
+
       <div class="bloco">
 
         <div class="fw-bold box-title">Operadores</div>
 
-        <input id="buscaOperador" class="form-control mt-2 mb-2" placeholder="Buscar operador">
+        <input id="buscaOperador"
+               class="form-control mt-2 mb-2"
+               placeholder="Buscar operador">
 
         <div id="listaOperadoresBusca"></div>
 
         <hr>
 
-        
-
+        <!-- SEM FUNÇÃO -->
         <div class="grupo-funcao">
-          <strong>Sem Função</strong>
+
+          <div class="titulo-funcao">
+            <strong>Sem Função</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="sem_funcao"></div>
+
         </div>
 
+        <!-- INDUÇÃO -->
         <div class="grupo-funcao">
-          <strong>Indução</strong>
+
+          <div class="titulo-funcao">
+            <strong>Indução</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="inducao"></div>
+
         </div>
 
+        <!-- LATERAL ESQUERDA -->
         <div class="grupo-funcao">
-          <strong>Lateral Esquerda</strong>
+
+          <div class="titulo-funcao">
+            <strong>Lateral Esquerda</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="lateral_e"></div>
+
         </div>
 
+        <!-- LATERAL DIREITA -->
         <div class="grupo-funcao">
-          <strong>Lateral Direita</strong>
+
+          <div class="titulo-funcao">
+            <strong>Lateral Direita</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="lateral_d"></div>
+
         </div>
 
+        <!-- PESCA ESQUERDA -->
         <div class="grupo-funcao">
-          <strong>Pesca Esquerda</strong>
+
+          <div class="titulo-funcao">
+            <strong>Pesca Esquerda</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="pesca_e"></div>
+
         </div>
 
+        <!-- PESCA DIREITA -->
         <div class="grupo-funcao">
-          <strong>Pesca Direita</strong>
+
+          <div class="titulo-funcao">
+            <strong>Pesca Direita</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="pesca_d"></div>
+
         </div>
 
+        <!-- BIPE ESQUERDA -->
         <div class="grupo-funcao">
-          <strong>Bipe Esquerda</strong>
+
+          <div class="titulo-funcao">
+            <strong>Bipe Esquerda</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="bipe_e"></div>
+
         </div>
 
+        <!-- BIPE DIREITA -->
         <div class="grupo-funcao">
-          <strong>Bipe Direita</strong>
+
+          <div class="titulo-funcao">
+            <strong>Bipe Direita</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="bipe_d"></div>
+
         </div>
 
+        <!-- GOL -->
         <div class="grupo-funcao">
-          <strong>Gol</strong>
+
+          <div class="titulo-funcao">
+            <strong>Gol</strong>
+            <span class="badge-funcao">0</span>
+          </div>
+
           <div class="drop-funcao" data-funcao="gol"></div>
+
         </div>
 
       </div>
+
     </div>
 
   </div>
@@ -120,37 +195,41 @@
 <!-- CONTEÚDO -->
 <div class="main-content">
 
-  <div class="mb-2 d-flex gap-1">
+  <div class="mb-2">
 
-  <button id="btnAddMesa" class="btn btn-primary btn-sm">
-    + Mesa
-  </button>
-<button id="btnNovoLayout" class="btn btn-outline-danger btn-sm">
-  Novo
-</button>
-  <button id="btnSalvarLayout" class="btn btn-success btn-sm">
-    Salvar
-  </button>
+    <button id="btnAddMesa" class="btn btn-primary btn-sm">
+      + Mesa
+    </button>
 
-  <button id="btnCarregarLayout" class="btn btn-secondary btn-sm">
-    Carregar
-  </button>
+    <button id="btnNovoLayout" class="btn btn-outline-danger btn-sm">
+      Novo
+    </button>
 
-  <button id="btnImprimir" class="btn btn-dark btn-sm">
-    Imprimir
-  </button>
+    <button id="btnSalvarLayout" class="btn btn-success btn-sm">
+      Salvar
+    </button>
 
-</div>
+    <button id="btnCarregarLayout" class="btn btn-secondary btn-sm">
+      Carregar
+    </button>
+
+    <button id="btnImprimir" class="btn btn-dark btn-sm">
+      Imprimir
+    </button>
+
+  </div>
 
   <div id="containerMesas"></div>
 
 </div>
 
-<!-- BOOTSTRAP JS (OBRIGATÓRIO PARA TABS) -->
+<!-- BOOTSTRAP -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- SEU JS -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- APP -->
 <script src="js/app.js"></script>
 
 </body>

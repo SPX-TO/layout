@@ -41,7 +41,7 @@ text-align: center;
 .operador-tag{
 background:#e0e0e0;
 display: flex;
-justify-content: space-between;
+justify-content:center;
 align-items: center;
 padding:4px 6px;
 border-radius: 8px;
@@ -245,4 +245,21 @@ user-select: none;
 .fanout-chip:hover{
 background:#d8d8d8;
 border-color:#777;
+}
+.titulo-funcao{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:4px;
+}
+
+.badge-funcao{
+background:#d9d9d9;
+border:1px solid #999;
+border-radius:10px;
+padding:1px 8px;
+font-size:11px;
+font-weight:600;
+min-width:24px;
+text-align:center;
 }
