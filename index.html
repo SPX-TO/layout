@@ -1,1 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Layout Esteira - Shopee</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .topbar {
+            width: 100%;
+            height: 60px;
+            background: #ee4d2d;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .topbar i {
+            font-size: 25px;
+            margin-right: 10px;
+        }
+
+        .container {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            padding: 45px 35px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+        }
+
+        .icon {
+            font-size: 48px;
+            color: #ee4d2d;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 28px;
+        }
+
+        .like-button {
+            background: #ee4d2d;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 13px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .like-button:hover {
+            background: #d94325;
+        }
+
+        .like-button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .like-button i {
+            margin-right: 7px;
+        }
+
+        .counter {
+            margin-top: 22px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .feedback {
+            min-height: 20px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 35px 22px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <i class="bi bi-shop"></i>
+        SHOPEE
+    </header>
+
+    <main class="container">
+
+        <section class="content">
+
+            <div class="icon">
+                <i class="bi bi-diagram-3"></i>
+            </div>
+
+            <h1>Opa! O sistema Layout Esteira foi descontinuado.</h1>
+
+            <p class="description">
+                Se você gostava de utilizar esse sistema,
+                deixe um like para registrar seu carinho!
+            </p>
+
+            <p class="date">
+                Encerramento em 09/11/2026
+            </p>
+
+            <button id="likeButton" class="like-button">
+                <i class="bi bi-hand-thumbs-up-fill"></i>
+                Curtir
+            </button>
+
+            <div id="counter" class="counter">
+                Carregando curtidas...
+            </div>
+
+            <div id="feedback" class="feedback"></div>
+
+        </section>
+
+    </main>
+
+    <script>
+        // =====================================
+        // SUPABASE
+        // =====================================
+
+        const SUPABASE_URL =
+            "https://lheqsngyllranmhvthsl.supabase.co";
+
+        const SUPABASE_ANON_KEY =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZXFzbmd5bGxyYW5taHZ0aHNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODEyMzcsImV4cCI6MjA4NzM1NzIzN30.VkaqrKL-6Hb9zMj-lv2ROQ5Y4v2I-6rXySMqN4wYofk";
+
+        const { createClient } = supabase;
+
+        const db = createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+        // =====================================
+        // ELEMENTOS
+        // =====================================
+
+        const likeButton = document.getElementById("likeButton");
+        const counter = document.getElementById("counter");
+        const feedback = document.getElementById("feedback");
+
+        const STORAGE_KEY = "layout_like_last_click";
+
+        // =====================================
+        // ATUALIZAR CONTADOR
+        // =====================================
+
+        async function updateCounter() {
+
+            const { data, error } = await db
+                .from("layout_likes")
+                .select("quantidade");
+
+            if (error) {
+                counter.textContent =
+                    "Curtidas indisponíveis no momento.";
+
+                console.error("Erro ao carregar curtidas:", error);
+                return;
+            }
+
+            const totalLikes = data.reduce(
+                (total, like) => total + like.quantidade,
+                0
+            );
+
+            counter.textContent =
+                `${totalLikes} curtidas, que tal curtir também?`;
+        }
+
+        // =====================================
+        // REGISTRAR CURTIDA
+        // =====================================
+
+        async function registerLike() {
+
+            const ultimoClique = Number(
+                localStorage.getItem(STORAGE_KEY) || 0
+            );
+
+            const agora = Date.now();
+
+            const tempoDecorrido = agora - ultimoClique;
+
+            const intervalo = 15000;
+
+            if (tempoDecorrido < intervalo) {
+
+                const restante = Math.ceil(
+                    (intervalo - tempoDecorrido) / 1000
+                );
+
+                feedback.textContent =
+                    `Opa! Aguarde ${restante} segundos para curtir novamente. Obrigado pelo carinho!`;
+
+                return;
+            }
+
+            likeButton.disabled = true;
+            feedback.textContent = "Registrando sua curtida...";
+
+            const { error } = await db
+                .from("layout_likes")
+                .insert({
+                    tipo: "real",
+                    quantidade: 1
+                });
+
+            if (error) {
+
+                feedback.textContent =
+                    "Não foi possível registrar. Tente novamente.";
+
+                console.error("Erro ao registrar like:", error);
+
+                likeButton.disabled = false;
+                return;
+            }
+
+            localStorage.setItem(STORAGE_KEY, Date.now());
+
+            feedback.textContent =
+                "Obrigado pelo carinho! Sua curtida foi registrada.";
+
+            await updateCounter();
+
+            likeButton.disabled = false;
+        }
+
+        // =====================================
+        // EVENTOS
+        // =====================================
+
+        likeButton.addEventListener("click", registerLike);
+
+        // =====================================
+        // INICIALIZAÇÃO
+        // =====================================
+
+        updateCounter();
+
+        // Atualiza o contador a cada 15 segundos
+        setInterval(updateCounter, 15000);
+
+    </script>
+
+</body>
+</html>
